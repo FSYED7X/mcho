@@ -54,7 +54,7 @@ export default function Invoice() {
   const { uploadData } = useIt();
   const user = useSelector((state) => state.auth.user);
   const history = useHistory();
-  
+
   useEffect(() => {
     if (user.access.invoice && !user.access.payment) {
       dispatch(changeFormType("invoice"));
@@ -275,8 +275,7 @@ export default function Invoice() {
             >
               {transactionType.map((item) => (
                 <MenuItem key={item} value={item}>
-                  {" "}
-                  {item}{" "}
+                  {item}
                 </MenuItem>
               ))}
             </TextField>
@@ -439,8 +438,7 @@ export default function Invoice() {
               >
                 {paymentType.map((item) => (
                   <MenuItem key={item} value={item}>
-                    {" "}
-                    {item}{" "}
+                    {item}
                   </MenuItem>
                 ))}
               </TextField>

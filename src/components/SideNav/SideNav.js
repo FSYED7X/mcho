@@ -123,6 +123,7 @@ export default function SideNav({ children }) {
   const dispatch = useDispatch();
   const classes = useStyles();
   const location = useLocation();
+  const user = useSelector((state) => state.auth.user);
   return (
     <div className={`${classes.root} sidenav`}>
       <CssBaseline />
@@ -153,31 +154,35 @@ export default function SideNav({ children }) {
         <Divider />
         <Divider />
         <br />
-        <ListItem
-          component={Link}
-          to="/bank/form"
-          selected={location.pathname.includes("/bank")}
-          button
-          className={`${classes.ListItem} mb-2`}
-        >
-          <ListItemIcon>
-            <AccountBalanceRoundedIcon />
-          </ListItemIcon>
-          <ListItemText primary="Bank" />
-        </ListItem>
+        {user.access.bank && (
+          <ListItem
+            component={Link}
+            to="/bank/form"
+            selected={location.pathname.includes("/bank")}
+            button
+            className={`${classes.ListItem} mb-2`}
+          >
+            <ListItemIcon>
+              <AccountBalanceRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary="Bank" />
+          </ListItem>
+        )}
 
-        <ListItem
-          component={Link}
-          to="/invoice/form"
-          selected={location.pathname.includes("/invoice")}
-          button
-          className={`${classes.ListItem} mb-2`}
-        >
-          <ListItemIcon>
-            <ReceiptRoundedIcon />
-          </ListItemIcon>
-          <ListItemText primary="INV & PYMNT" />
-        </ListItem>
+        {(user.access.invoice || user.access.payment) && (
+          <ListItem
+            component={Link}
+            to="/invoice/form"
+            selected={location.pathname.includes("/invoice")}
+            button
+            className={`${classes.ListItem} mb-2`}
+          >
+            <ListItemIcon>
+              <ReceiptRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary="INV & PYMNT" />
+          </ListItem>
+        )}
 
         {/* <ListItem
           component={Link}
@@ -216,18 +221,20 @@ export default function SideNav({ children }) {
             </ListItem>
           )}
 
-          <ListItem
-            component={Link}
-            to="/settings"
-            selected={location.pathname.includes("/settings")}
-            button
-            className={`${classes.ListItem} mb-2`}
-          >
-            <ListItemIcon>
-              <SettingsRoundedIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-          </ListItem>
+          {user.access.settings && (
+            <ListItem
+              component={Link}
+              to="/settings"
+              selected={location.pathname.includes("/settings")}
+              button
+              className={`${classes.ListItem} mb-2`}
+            >
+              <ListItemIcon>
+                <SettingsRoundedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Settings" />
+            </ListItem>
+          )}
 
           <ListItem
             button

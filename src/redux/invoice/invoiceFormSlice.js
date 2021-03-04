@@ -50,7 +50,6 @@ export const invoiceFormSlice = createSlice({
                 state.formfields.invoiceNote = '';
                 state.formfields.tare = '';
                 state.formfields.discount = '';
-                // state.formfields.invoiceAmount = '';
                 state.formfields.unitPrice = '';
             }
         },

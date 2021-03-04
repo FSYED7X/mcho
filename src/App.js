@@ -69,6 +69,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    document.getElementById("container").scrollTo(0, 0);
     if (user) {
       var myHeaders = new Headers();
       var raw = JSON.stringify({ email: user.email });
@@ -94,10 +95,6 @@ function App() {
           console.log("error", error);
         });
     }
-  }, []);
-
-  useEffect(() => {
-    document.getElementById("container").scrollTo(0, 0);
   }, [location]);
 
   const PrivateRoute = ({ component: Component, ...rest }) => {

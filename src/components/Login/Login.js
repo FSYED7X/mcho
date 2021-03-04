@@ -95,7 +95,11 @@ export default function Login(props) {
           dispatch(setUser(result.result));
           props.location.state
             ? history.push(props.location.state.prevPath)
-            : history.push("/bank/form");
+            : result.result.access.bank
+            ? history.push("/bank/form")
+            : result.result.access.invoice || result.result.access.payment
+            ? history.push("/bank/form")
+            : history.push("/noaccess");
         } else {
           setState({ ...state, loading: false, error: true });
           console.log("asd");
