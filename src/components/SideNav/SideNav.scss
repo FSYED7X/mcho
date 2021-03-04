@@ -1,0 +1,39 @@
+$primaryColor:#000;
+
+.sidenav{
+    .MuiDrawer-root {
+    z-index: 100; 
+        padding: 1%;
+        .MuiDrawer-paper{
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            overflow-x: hidden!important;
+
+            .MuiDivider-root {
+                margin: 0 8%!important;
+            }
+        }
+    }
+    .MuiListItem-root{
+        border-left: 2px solid transparent;   
+        border: 3px solid transparent;   
+        // color: rgba(0, 0, 0, 0.54); 
+    }
+    // .Mui-selected{
+    //     background: none!important;
+    //     color:$primaryColor!important;
+    //     border-left: 2px solid $primaryColor;   
+    //     .MuiListItemIcon-root{
+    //     color:$primaryColor!important;   
+    //     }
+    // } 
+    aside{
+        .MuiButtonBase-root{
+            padding-top: 8px!important;
+            padding-bottom: 8px!important;
+        }
+    }
+    .MuiListItem-button {
+        transition: none;
+    }
+}

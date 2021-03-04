@@ -1,0 +1,145 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+*,body{
+  font-weight: 500!important;
+  font-family: 'Montserrat', sans-serif!important;
+  scroll-behavior: auto;
+}
+button *{
+  font-weight: bolder!important;
+}
+button:focus{
+  outline: none;
+} 
+a:hover{
+  color: unset!important;
+}
+.MuiPickersDatePickerRoot-toolbar{
+  background: url(https://source.unsplash.com/featured/?universe,planets) no-repeat;
+  background-position: center;
+  background-size: cover;
+} 
+.MuiPickersBasePicker-pickerView{
+padding-bottom: 10px!important;
+}
+label{
+  font-weight: bolder!important;
+}
+.MuiPickersToolbar-toolbarLandscape{
+  max-width: 50%!important;
+  width: 40%!important;
+}
+.MuiPickersBasePicker-pickerViewLandscape{
+  margin: auto;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+.MuiButton-root{
+  min-width: fit-content!important;
+}
+// .btn-gradient-primary{
+//   background: linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)!important;
+//   color: #fff!important;
+// }
+// .btn-gradient-success{
+//   background-color: #8871FF!important;
+//   /* background: linear-gradient(135deg, #8871FF 0%, #8770FE 100%)!important; */
+//   color: #fff!important;
+
+// }
+
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background:linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)!important
+}
+
+@media screen and (max-width:786px){
+  // .col-sm-12,
+  // .col-12,
+  // .navbar,
+  // .MuiToggleButtonGroup-root {
+  //   padding: 0!important;
+  // }
+  // .removeM{
+  //   padding: 0!important;
+  //   margin: 0!important;
+  // }
+}
+
+
+
+//! Bricks Loading
+@mixin loading($bricks-color) {
+  position: relative;
+  top: 8px;
+  left: -9999px;
+  width: 10px;
+  height: 4px;
+  border-radius: 5px;
+  background-color: $bricks-color;
+  color: $bricks-color;
+  box-shadow: 9991px -16px 0 0 $bricks-color, 9991px 0 0 0 $bricks-color, 10007px 0 0 0 $bricks-color;
+  animation: #{$bricks-color} 2s infinite ease;
+
+  @keyframes #{$bricks-color} {
+      0% {
+        box-shadow: 9991px -16px 0 0 $bricks-color, 9991px 0 0 0 $bricks-color, 10007px 0 0 0 $bricks-color;
+      }
+      8.333% {
+        box-shadow: 10007px -16px 0 0 $bricks-color, 9991px 0 0 0 $bricks-color, 10007px 0 0 0 $bricks-color;
+      }
+      16.667% {
+        box-shadow: 10007px -16px 0 0 $bricks-color, 9991px -16px 0 0 $bricks-color, 10007px 0 0 0 $bricks-color;
+      }
+      25% {
+        box-shadow: 10007px -16px 0 0 $bricks-color, 9991px -16px 0 0 $bricks-color, 9991px 0 0 0 $bricks-color;
+      }
+      33.333% {
+        box-shadow: 10007px 0 0 0 $bricks-color, 9991px -16px 0 0 $bricks-color, 9991px 0 0 0 $bricks-color;
+      }
+      41.667% {
+        box-shadow: 10007px 0 0 0 $bricks-color, 10007px -16px 0 0 $bricks-color, 9991px 0 0 0 $bricks-color;
+      }
+      50% {
+        box-shadow: 10007px 0 0 0 $bricks-color, 10007px -16px 0 0 $bricks-color, 9991px -16px 0 0 $bricks-color;
+      }
+      58.333% {
+        box-shadow: 9991px 0 0 0 $bricks-color, 10007px -16px 0 0 $bricks-color, 9991px -16px 0 0 $bricks-color;
+      }
+      66.666% {
+        box-shadow: 9991px 0 0 0 $bricks-color, 10007px 0 0 0 $bricks-color, 9991px -16px 0 0 $bricks-color;
+      }
+      75% {
+        box-shadow: 9991px 0 0 0 $bricks-color, 10007px 0 0 0 $bricks-color, 10007px -16px 0 0 $bricks-color;
+      }
+      83.333% {
+        box-shadow: 9991px -16px 0 0 $bricks-color, 10007px 0 0 0 $bricks-color, 10007px -16px 0 0 $bricks-color;
+      }
+      91.667% {
+        box-shadow: 9991px -16px 0 0 $bricks-color, 9991px 0 0 0 $bricks-color, 10007px -16px 0 0 $bricks-color;
+      }
+      100% {
+        box-shadow: 9991px -16px 0 0 $bricks-color, 9991px 0 0 0 $bricks-color, 10007px 0 0 0 $bricks-color;
+      }
+    }
+}
+//! Bricks Loading General (white)
+.bricks-white{
+  @include loading(white)
+}
+.bricks-grey{
+  @include loading(grey)
+}
