@@ -1,0 +1,30 @@
+.sidenav .MuiDrawer-root {
+  z-index: 100;
+  padding: 1%;
+}
+
+.sidenav .MuiDrawer-root .MuiDrawer-paper {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  overflow-x: hidden !important;
+}
+
+.sidenav .MuiDrawer-root .MuiDrawer-paper .MuiDivider-root {
+  margin: 0 8% !important;
+}
+
+.sidenav .MuiListItem-root {
+  border-left: 2px solid transparent;
+  border: 3px solid transparent;
+}
+
+.sidenav aside .MuiButtonBase-root {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+.sidenav .MuiListItem-button {
+  -webkit-transition: none;
+  transition: none;
+}
+/*# sourceMappingURL=SideNav.css.map */
