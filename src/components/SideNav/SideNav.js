@@ -154,7 +154,7 @@ export default function SideNav({ children }) {
         <Divider />
         <Divider />
         <br />
-        {user.access.bank && (
+        {user && user.access.bank && (
           <ListItem
             component={Link}
             to="/bank/form"
@@ -169,7 +169,7 @@ export default function SideNav({ children }) {
           </ListItem>
         )}
 
-        {(user.access.invoice || user.access.payment) && (
+        {user && (user.access.invoice || user.access.payment) && (
           <ListItem
             component={Link}
             to="/invoice/form"
@@ -221,7 +221,7 @@ export default function SideNav({ children }) {
             </ListItem>
           )}
 
-          {user.access.settings && (
+          {user && user.access.settings && (
             <ListItem
               component={Link}
               to="/settings"

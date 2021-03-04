@@ -69,8 +69,8 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    document.getElementById("container").scrollTo(0, 0);
     if (user) {
+      document.getElementById("container").scrollTo(0, 0);
       var myHeaders = new Headers();
       var raw = JSON.stringify({ email: user.email });
       var requestOptions = {
