@@ -129,13 +129,6 @@ export default function Invoice() {
       className="row py-2 justify-content-between"
       onSubmit={(e) => e.preventDefault()}
     >
-      {/* <input
-        type="file"
-        onChange={(e) =>
-          tinify.fromFile(e.target.files[0]).toFile("optimized.png")
-        }
-      /> */}
-
       <div className="col-lg-2 col-12 align-self-center">
         <div className="mb-4 pb-2">
           <Avatar
@@ -201,7 +194,6 @@ export default function Invoice() {
                       <ToggleButton value="payment">PAYMENT</ToggleButton>
                     )}
                   </ToggleButtonGroup>
-                  {/* <CurrencyList currency={invoiceForm.currency} setCurrency={(e) => setData('currency', e)} /> */}
                 </div>
               </div>
             </section>
@@ -296,7 +288,6 @@ export default function Invoice() {
             </div>
             <div className="col-md-4 col-sm-12">
               <TextField
-                required
                 value={invoiceForm.tare || ""}
                 type="number"
                 onChange={(e) => setData("tare", e.target.value)}
@@ -351,9 +342,8 @@ export default function Invoice() {
                 label="Discount"
                 fullwidth="true"
                 className="w-100 mb-4 pb-2"
-                inputProps={{ min: "0.01", step: "0.01" }}
+                inputProps={{ min: "0.00", step: "0.01" }}
                 type="number"
-                required
                 onChange={(e) => setData("discount", e.target.value)}
                 InputProps={{
                   endAdornment: (
@@ -380,8 +370,6 @@ export default function Invoice() {
                 inputProps={{
                   readOnly: true,
                   disabled: true,
-                  min: "0.01",
-                  step: "0.01",
                 }}
                 InputProps={{
                   endAdornment: (
@@ -392,17 +380,6 @@ export default function Invoice() {
                 }}
               />
             </div>
-            {/* <div className="col-md-4 col-sm-12">
-                            <TextField required value={invoiceForm.invoiceAmount} variant="outlined" label="Amount" fullwidth="true" className='w-100 mb-4 pb-2' inputProps={{ min: "0.01", step: "0.01" }} type="number" onChange={(e) => setData('invoiceAmount', e.target.value)}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="start">
-                                            {invoiceForm.currency.substring(0, 3)}
-                                        </InputAdornment>
-                                    ),
-                                }}
-                            />
-                            </div>*/}
           </section>
         ) : (
           <section className="row align-items-center">
@@ -516,7 +493,7 @@ export default function Invoice() {
         </section>
       </div>
       <div
-        className="text-center mt-0 mt-lg-4 col-lg-5 col-md-7 col-sm-12 mx-auto p-1"
+        className="text-center mt-0 mt-lg-4 col-lg-6 col-md-10 col-sm-12 mx-auto p-1"
         style={{ display: "flex", justifyContent: "space-around" }}
       >
         <Button

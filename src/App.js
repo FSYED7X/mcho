@@ -83,7 +83,6 @@ function App() {
         .then((response) => response.json())
         .then((result) => {
           if (result.result) {
-            console.log(result);
             localStorage.user = JSON.stringify(result.result);
             dispatch(setUser(result.result));
           } else {

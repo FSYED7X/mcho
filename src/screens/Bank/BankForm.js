@@ -80,11 +80,11 @@ function BankForm() {
         className="row mt-3 justify-content-between"
         onSubmit={(e) => e.preventDefault()}
       >
-        <div className="col-md-6 col-12">
+        <div className="col-lg-6 col-12">
           <BanksList />
         </div>
 
-        <div className="col-md-6 col-sm-12">
+        <div className="col-lg-6 col-sm-12">
           <div className="mb-4 pb-2">
             <CurrencyList
               currency={bankForm.currency}
@@ -92,7 +92,7 @@ function BankForm() {
             />
           </div>
         </div>
-        <div className="col-md-6 col-sm-12">
+        <div className="col-lg-6 col-sm-12">
           <TextField
             required={bankForm.type === "Other" ? false : true}
             value={bankForm.payeeBank || ""}
@@ -103,7 +103,7 @@ function BankForm() {
             inputProps={{ className: "text-capitalize" }}
           />
         </div>
-        <div className="col-md-6 col-sm-12">
+        <div className="col-lg-6 col-sm-12">
           <TextField
             required
             value={bankForm.payee || ""}
@@ -114,7 +114,7 @@ function BankForm() {
             inputProps={{ className: "text-capitalize" }}
           />
         </div>
-        <div className="col-md-6 col-sm-12 align-self-center">
+        <div className="col-lg-6 col-sm-12 align-self-center">
           <div className="mb-4 pb-2">
             <Calendar
               date={bankForm.date}
@@ -122,9 +122,9 @@ function BankForm() {
             />
           </div>
         </div>
-        <div className="col-md-6 col-sm-12">
+        <div className="col-lg-6 col-sm-12">
           <section className="row align-items-center">
-            <div className="col-md-6 col-sm-12">
+            <div className="col-lg-6 col-sm-12">
               <TextField
                 required={bankForm.type === "Other" ? false : true}
                 value={bankForm.cheque || ""}
@@ -135,7 +135,7 @@ function BankForm() {
                 className="w-100 mb-4 pb-2"
               />
             </div>
-            <div className="col-md-6 col-sm-12">
+            <div className="col-lg-6 col-sm-12">
               <TextField
                 required
                 value={bankForm.type}
@@ -155,7 +155,7 @@ function BankForm() {
             </div>
           </section>
           <section className="row align-items-center">
-            <div className="col-md-6 col-sm-12">
+            <div className="col-lg-6 col-sm-12">
               <TextField
                 value={bankForm[selectedValue]}
                 inputRef={amount}
@@ -176,7 +176,7 @@ function BankForm() {
                 }}
               />
             </div>
-            <div className="col-md-6 col-sm-12">
+            <div className="col-lg-6 col-sm-12">
               <div className=" mb-4 pb-2">
                 <ToggleButtons
                   value={selectedValue}
@@ -243,7 +243,7 @@ function BankForm() {
           </section>
         </div>
         <div
-          className="text-center mt-0 mt-lg-4 col-lg-5 col-md-7 col-sm-12 mx-auto p-1"
+          className="text-center mt-0 mt-lg-4 col-lg-6 col-md-10 col-sm-12 mx-auto p-1"
           style={{ display: "flex", justifyContent: "space-around" }}
         >
           <Button
