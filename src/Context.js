@@ -61,23 +61,33 @@ function ContextProvider({ children }) {
     return new Promise((resolve, reject) => {
       setCode && dispatch(setCode({ key: "code", value: nanoid() }));
       dispatch(toggleLoading());
-      console.log(JSON.stringify(data))
       var requestOptions = {
         method: "POST",
         body: JSON.stringify(data),
         redirect: "follow",
       };
       fetch(URL, requestOptions)
-        .then((response) => response.text())
+        .then((response) => response.json())
         .then((result) => {
-          dispatch(
-            openSnackbar({
-              type: "success",
-              mesg: "Data Uploaded Successfully",
-            })
-          );
-          dispatch(toggleLoading());
-          resolve();
+          if (result.result) {
+            dispatch(
+              openSnackbar({
+                type: "success",
+                mesg: "Data Uploaded Successfully",
+              })
+            );
+            dispatch(toggleLoading());
+            resolve();
+          } else {
+            dispatch(
+              openSnackbar({
+                type: "error",
+                mesg: "Some error occured, please try again",
+              })
+            );
+            dispatch(toggleLoading());
+            reject();
+          }
         })
         .catch((error) => {
           console.log("Error asd:", error);

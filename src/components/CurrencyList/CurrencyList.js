@@ -32,7 +32,6 @@ export default function CurrencyList({ currency, setCurrency }) {
                 <div>
                     <img className="border border-dark" key={nextId()} ref={img} src={`/flags/${Object.keys(option)[0].toLowerCase()}.png`} alt="" onError={(e) => { e.target.onerror = null; e.target.src = "/flags/default.png" }} />
                     &nbsp;&nbsp;&nbsp;
-                    {/* onError={() => console.log(Object.keys(option)[0].toLowerCase())} */}
                     <b>{Object.keys(option)[0] + " " + Object.values(option)[0]}</b>
                 </div>
             )}

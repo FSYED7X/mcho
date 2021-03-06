@@ -89,7 +89,6 @@ export default function Login(props) {
       .then((response) => response.json())
       .then((result) => {
         if (result.result) {
-          console.log(result);
           localStorage.user = JSON.stringify(result.result);
           setState({ ...state, loading: false });
           dispatch(setUser(result.result));
@@ -102,7 +101,6 @@ export default function Login(props) {
             : history.push("/noaccess");
         } else {
           setState({ ...state, loading: false, error: true });
-          console.log("asd");
         }
       })
       .catch((error) => {

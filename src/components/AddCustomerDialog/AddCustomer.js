@@ -64,8 +64,6 @@ export default function AddBank() {
       image: form.current.image.value,
     });
 
-    console.log(JSON.parse(raw));
-
     var requestOptions = {
       method: "POST",
       body: raw,
@@ -75,7 +73,6 @@ export default function AddBank() {
     fetch(BASE_URL + "?action=addCustomer", requestOptions)
       .then((response) => response.json())
       .then((result) => {
-        console.log(result.result);
         if (result.result === "error") setError(true);
         else {
           setError(false);
