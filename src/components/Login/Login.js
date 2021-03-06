@@ -74,8 +74,8 @@ export default function Login(props) {
   const dispatch = useDispatch();
   const history = useHistory();
   const handleSubmit = (e) => {
-    e.preventDefault();
     setState({ ...state, loading: true });
+    e.preventDefault();
     var myHeaders = new Headers();
     var raw = JSON.stringify({ email: state.email, password: state.password });
     var requestOptions = {

@@ -1,4 +1,11 @@
-import { Badge, Button, Checkbox, IconButton, Paper } from "@material-ui/core";
+import {
+  Badge,
+  Button,
+  Checkbox,
+  CircularProgress,
+  IconButton,
+  Paper,
+} from "@material-ui/core";
 import React, { Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
@@ -174,7 +181,8 @@ function Navbar() {
         {savedBankLoading ? (
           <Fragment>
             Uploading
-            <i className="bricks-white ml-4 mr-2" />
+            <CircularProgress color="inherit" size="25px" thickness="5" />
+            {/* <i className="bricks-white ml-4 mr-2" /> */}
           </Fragment>
         ) : (
           <Fragment>
@@ -207,7 +215,8 @@ function Navbar() {
         {savedInvoiceLoading ? (
           <Fragment>
             Uploading
-            <i className="bricks-white ml-4 mr-2" />
+            <CircularProgress color="inherit" size="25px" thickness="5" />
+            {/* <i className="bricks-white ml-4 mr-2" /> */}
           </Fragment>
         ) : (
           <Fragment>

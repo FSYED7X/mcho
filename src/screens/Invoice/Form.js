@@ -8,6 +8,7 @@ import {
   MenuItem,
   TextField,
   makeStyles,
+  CircularProgress,
 } from "@material-ui/core";
 import Calendar from "../../components/Calendar/Calendar";
 import CurrencyList from "../../components/CurrencyList/CurrencyList";
@@ -529,7 +530,8 @@ export default function Invoice() {
             onClick={submit}
           >
             {loading ? (
-              <i className="bricks-white" />
+              // <i className="bricks-white" />
+              <CircularProgress color="inherit" size="25px" thickness="5" />
             ) : (
               <span style={{ display: "flex" }}>
                 <CloudUploadOutlinedIcon />

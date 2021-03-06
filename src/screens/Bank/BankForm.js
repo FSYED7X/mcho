@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import CurrencyList from "../../components/CurrencyList/CurrencyList";
 import {
   Button,
+  CircularProgress,
   IconButton,
   InputAdornment,
   MenuItem,
@@ -279,7 +280,8 @@ function BankForm() {
               onClick={submit}
             >
               {loading ? (
-                <i className="bricks-white" />
+                // <i className="bricks-white" />
+                <CircularProgress color="inherit" size="25px" thickness="5" />
               ) : (
                 <span style={{ display: "flex" }}>
                   <CloudUploadOutlinedIcon /> &nbsp;&nbsp;Upload
