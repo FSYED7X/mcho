@@ -58,9 +58,9 @@ function ContextProvider({ children }) {
   };
 
   const uploadData = (data, toggleLoading, URL, setCode) => {
+    dispatch(toggleLoading());
     return new Promise((resolve, reject) => {
       setCode && dispatch(setCode({ key: "code", value: nanoid() }));
-      dispatch(toggleLoading());
       var requestOptions = {
         method: "POST",
         body: JSON.stringify(data),
