@@ -360,10 +360,10 @@ export default function Invoice() {
                 value={
                   (invoiceForm.weight - invoiceForm.tare) *
                     invoiceForm.unitPrice -
-                  invoiceForm.discount
+                    invoiceForm.discount || ""
                 }
                 variant="outlined"
-                label="Total Amount"
+                label="Ttl Amt"
                 fullwidth="true"
                 className="w-100 mb-4 pb-2"
                 type="number"

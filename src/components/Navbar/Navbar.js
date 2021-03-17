@@ -180,7 +180,7 @@ function Navbar() {
       >
         {savedBankLoading ? (
           <Fragment>
-            Uploading
+            Uploading&nbsp;&nbsp;
             <CircularProgress color="inherit" size="25px" thickness="5" />
             {/* <i className="bricks-white ml-4 mr-2" /> */}
           </Fragment>
@@ -214,7 +214,7 @@ function Navbar() {
       >
         {savedInvoiceLoading ? (
           <Fragment>
-            Uploading
+            Uploading&nbsp;&nbsp;
             <CircularProgress color="inherit" size="25px" thickness="5" />
             {/* <i className="bricks-white ml-4 mr-2" /> */}
           </Fragment>

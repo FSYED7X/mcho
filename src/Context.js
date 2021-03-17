@@ -14,7 +14,6 @@ import { nanoid } from "nanoid";
 import { useHistory } from "react-router-dom";
 
 const Context = createContext();
-
 const month = [
   "Jan",
   "Feb",
@@ -61,6 +60,7 @@ function ContextProvider({ children }) {
     dispatch(toggleLoading());
     return new Promise((resolve, reject) => {
       setCode && dispatch(setCode({ key: "code", value: nanoid() }));
+      console.log(JSON.stringify(data));
       var requestOptions = {
         method: "POST",
         body: JSON.stringify(data),
@@ -69,6 +69,7 @@ function ContextProvider({ children }) {
       fetch(URL, requestOptions)
         .then((response) => response.json())
         .then((result) => {
+          console.log(result);
           if (result.result) {
             dispatch(
               openSnackbar({
