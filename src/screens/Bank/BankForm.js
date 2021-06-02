@@ -15,7 +15,6 @@ import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
 import RotateLeftOutlinedIcon from "@material-ui/icons/RotateLeftOutlined";
 import SaveIcon from "@material-ui/icons/Save";
 import { openSnackbar, toggleLoading } from "../../redux/screenSlice";
-import { Offline, Online } from "react-detect-offline";
 import ToggleButtons from "../../components/ToggleButtons/ToggleButtons";
 import WifiOffRoundedIcon from "@material-ui/icons/WifiOffRounded";
 import { setbankSavedData } from "../../redux/bank/bankSavedDataSlice";
@@ -26,6 +25,8 @@ import copy from "copy-to-clipboard";
 import { nanoid } from "nanoid";
 import { BASE_URL } from "../../urlConstants";
 import { useHistory } from "react-router-dom";
+import { Fragment } from "react";
+const isOnline = require("is-online");
 
 const transactionType = ["Cash", "Cheque", "ATM Online", "Pay Order", "Other"];
 
@@ -42,10 +43,10 @@ function BankForm() {
   const { uploadData, getBanksList } = useIt();
   const user = useSelector((state) => state.auth.user);
   const history = useHistory();
+  const access = useSelector((state) => state.auth.user.access.bank.form);
 
   useEffect(() => {
-    if (!localStorage.banksList) getBanksList();
-    !user.access.bank && history.push("/noaccess");
+    !access && history.push("/noaccess");
   }, []);
 
   const submit = (e) => {
@@ -78,7 +79,7 @@ function BankForm() {
     <React.Fragment>
       <form
         ref={form}
-        className="row mt-3 justify-content-between"
+        className="row mt-4 pt-2 justify-content-between"
         onSubmit={(e) => e.preventDefault()}
       >
         <div className="col-lg-6 col-12">
@@ -271,36 +272,38 @@ function BankForm() {
             &nbsp;&nbsp;Save
           </Button>
 
-          <Online>
-            <Button
-              size="large"
-              disabled={loading ? true : false}
-              variant="contained"
-              className={`bg-warning text-white`}
-              onClick={submit}
-            >
-              {loading ? (
-                // <i className="bricks-white" />
-                <CircularProgress color="inherit" size="25px" thickness="5" />
-              ) : (
-                <span style={{ display: "flex" }}>
-                  <CloudUploadOutlinedIcon /> &nbsp;&nbsp;Upload
-                </span>
-              )}
-            </Button>
-          </Online>
-
-          <Offline>
-            <Button
-              size="large"
-              disabled
-              variant="contained"
-              className={`text-light btn-warning`}
-            >
-              <WifiOffRoundedIcon />
-              &nbsp;&nbsp;Offline
-            </Button>
-          </Offline>
+          {isOnline ? (
+            <Fragment>
+              <Button
+                size="large"
+                disabled={loading ? true : false}
+                variant="contained"
+                className={`bg-warning text-white`}
+                onClick={submit}
+              >
+                {loading ? (
+                  // <i className="bricks-white" />
+                  <CircularProgress color="inherit" size="25px" thickness="5" />
+                ) : (
+                  <span style={{ display: "flex" }}>
+                    <CloudUploadOutlinedIcon /> &nbsp;&nbsp;Upload
+                  </span>
+                )}
+              </Button>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <Button
+                size="large"
+                disabled
+                variant="contained"
+                className={`text-light btn-warning`}
+              >
+                <WifiOffRoundedIcon />
+                &nbsp;&nbsp;Offline
+              </Button>
+            </Fragment>
+          )}
         </div>
       </form>
     </React.Fragment>

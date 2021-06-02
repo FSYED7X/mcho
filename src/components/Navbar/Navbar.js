@@ -6,7 +6,7 @@ import {
   IconButton,
   Paper,
 } from "@material-ui/core";
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import AccountBalanceRoundedIcon from "@material-ui/icons/AccountBalanceRounded";
@@ -15,12 +15,10 @@ import {
   toggleAddBankDialog,
   toggleAddCustomerDialog,
 } from "../../redux/screenSlice";
-import { BrowserView, MobileView } from "react-device-detect";
+import { BrowserView, isMobile, MobileView } from "react-device-detect";
 import QueueRoundedIcon from "@material-ui/icons/QueueRounded";
 import BookmarksRoundedIcon from "@material-ui/icons/BookmarksRounded";
 import WifiOffRoundedIcon from "@material-ui/icons/WifiOffRounded";
-import { Offline, Online } from "react-detect-offline";
-
 import {
   removeBankAllRequest,
   selectAllBankRequests,
@@ -45,11 +43,14 @@ import AccountBalanceWalletRoundedIcon from "@material-ui/icons/AccountBalanceWa
 import PersonAddRoundedIcon from "@material-ui/icons/PersonAddRounded";
 import { BASE_URL } from "../../urlConstants";
 import ErrorOutlineOutlinedIcon from "@material-ui/icons/ErrorOutlineOutlined";
+import AppContext from "../../store/AppContext/AppContext";
+
 function Navbar() {
+  const { isOnline } = useContext(AppContext);
   const location = useLocation();
   const history = useHistory();
   const theme = useSelector((state) => state.screen.theme);
-
+  const { dialogs, setDialogs } = useContext(AppContext);
   const bankSavedData = useSelector((state) => state.bankSavedData.value);
   const savedBankLoading = useSelector((state) => state.bankSavedData.loading);
   const bankRequests = useSelector((state) => state.bankSavedData.requests);
@@ -150,6 +151,21 @@ function Navbar() {
       icon: <SettingsRoundedIcon />,
       action: "",
     },
+    "/settings/manage/bks": {
+      title: "Manage Banks",
+      icon: <ArrowBackRoundedIcon />,
+      action: () => history.goBack(),
+    },
+    "/settings/manage/customers": {
+      title: "Manage Customers",
+      icon: <ArrowBackRoundedIcon />,
+      action: () => history.goBack(),
+    },
+    "/settings/manage/operators": {
+      title: "Manage Operators",
+      icon: <ArrowBackRoundedIcon />,
+      action: () => history.goBack(),
+    },
     "/noaccess": {
       title: "Access Blocked",
       icon: <ErrorOutlineOutlinedIcon color="secondary" />,
@@ -158,17 +174,6 @@ function Navbar() {
   }[location.pathname];
 
   const asideButton = {
-    "/bank/form": (
-      <Button
-        className="px-2 px-lg-3"
-        variant="contained"
-        color={theme ? "primary" : "secondary"}
-        onClick={() => dispatch(toggleAddBankDialog())}
-      >
-        <QueueRoundedIcon />
-        <BrowserView>&nbsp;&nbsp;ADD</BrowserView>
-      </Button>
-    ),
     "/bank/saved": (
       <Button
         disabled={savedBankLoading}
@@ -182,7 +187,6 @@ function Navbar() {
           <Fragment>
             Uploading&nbsp;&nbsp;
             <CircularProgress color="inherit" size="25px" thickness="5" />
-            {/* <i className="bricks-white ml-4 mr-2" /> */}
           </Fragment>
         ) : (
           <Fragment>
@@ -192,7 +196,18 @@ function Navbar() {
         )}
       </Button>
     ),
-    "/invoice/form": (
+    "/settings/manage/bks": (
+      <Button
+        className="px-2 px-lg-3"
+        variant="contained"
+        color={theme ? "primary" : "secondary"}
+        onClick={() => dispatch(toggleAddBankDialog())}
+      >
+        <QueueRoundedIcon />
+        <BrowserView>&nbsp;&nbsp;ADD</BrowserView>
+      </Button>
+    ),
+    "/settings/manage/customers": (
       <Button
         className="px-2 px-lg-3"
         variant="contained"
@@ -200,7 +215,26 @@ function Navbar() {
         onClick={() => dispatch(toggleAddCustomerDialog())}
       >
         <PersonAddRoundedIcon />
-        <BrowserView>&nbsp;&nbsp;ADD</BrowserView>
+        &nbsp;&nbsp;ADD
+      </Button>
+    ),
+    "/settings/manage/operators": (
+      <Button
+        className="px-2 px-lg-3"
+        variant="contained"
+        color={theme ? "primary" : "secondary"}
+        onClick={() =>
+          setDialogs({
+            ...dialogs,
+            operators: {
+              ...dialogs.operators,
+              add: { ...dialogs.operators.add, open: true },
+            },
+          })
+        }
+      >
+        <PersonAddRoundedIcon />
+        &nbsp;&nbsp;ADD
       </Button>
     ),
     "/invoice/saved": (
@@ -226,39 +260,39 @@ function Navbar() {
         )}
       </Button>
     ),
-    "/payment/form": (
-      <Button
-        className="px-2 px-lg-3"
-        variant="contained"
-        color={theme ? "primary" : "secondary"}
-        onClick={() => dispatch(toggleAddCustomerDialog())}
-      >
-        <PersonAddRoundedIcon />
-        <BrowserView>&nbsp;&nbsp;ADD</BrowserView>
-      </Button>
-    ),
-    "/payment/saved": (
-      <Button
-        disabled={savedPaymentLoading}
-        hidden={!paymentRequests.length}
-        onClick={uploadPaymentData}
-        type="button"
-        variant="contained"
-        className="bg-warning text-white px-2 px-lg-3"
-      >
-        {savedPaymentLoading ? (
-          <Fragment>
-            Uploading
-            <i className="bricks-white ml-4 mr-2" />
-          </Fragment>
-        ) : (
-          <Fragment>
-            <BackupRoundedIcon />
-            <BrowserView>&nbsp;&nbsp;Upload</BrowserView>
-          </Fragment>
-        )}
-      </Button>
-    ),
+    // "/payment/form": (
+    //   <Button
+    //     className="px-2 px-lg-3"
+    //     variant="contained"
+    //     color={theme ? "primary" : "secondary"}
+    //     onClick={() => dispatch(toggleAddCustomerDialog())}
+    //   >
+    //     <PersonAddRoundedIcon />
+    //     <BrowserView>&nbsp;&nbsp;ADD</BrowserView>
+    //   </Button>
+    // ),
+    // "/payment/saved": (
+    //   <Button
+    //     disabled={savedPaymentLoading}
+    //     hidden={!paymentRequests.length}
+    //     onClick={uploadPaymentData}
+    //     type="button"
+    //     variant="contained"
+    //     className="bg-warning text-white px-2 px-lg-3"
+    //   >
+    //     {savedPaymentLoading ? (
+    //       <Fragment>
+    //         Uploading
+    //         <i className="bricks-white ml-4 mr-2" />
+    //       </Fragment>
+    //     ) : (
+    //       <Fragment>
+    //         <BackupRoundedIcon />
+    //         <BrowserView>&nbsp;&nbsp;Upload</BrowserView>
+    //       </Fragment>
+    //     )}
+    //   </Button>
+    // ),
   }[location.pathname];
 
   const asideIconButton = {
@@ -298,32 +332,33 @@ function Navbar() {
         disabled={savedInvoiceLoading ? true : false}
       />
     ),
-    "/payment/form": (
-      <IconButton onClick={() => history.push("/payment/saved")}>
-        <Badge badgeContent={paymentSavedData.length} color="secondary">
-          <BookmarksRoundedIcon />
-        </Badge>
-      </IconButton>
-    ),
-    "/payment/saved": paymentSavedData.length > 0 && (
-      <Checkbox
-        color="primary"
-        className="mx-4"
-        checked={
-          paymentSavedData.length === paymentRequests.length &&
-          paymentRequests.length > 0
-        }
-        onChange={(e) => dispatch(selectAllPaymentRequests(e.target.checked))}
-        disabled={savedPaymentLoading ? true : false}
-      />
-    ),
+    // "/payment/form": (
+    //   <IconButton onClick={() => history.push("/payment/saved")}>
+    //     <Badge badgeContent={paymentSavedData.length} color="secondary">
+    //       <BookmarksRoundedIcon />
+    //     </Badge>
+    //   </IconButton>
+    // ),
+    // "/payment/saved": paymentSavedData.length > 0 && (
+    //   <Checkbox
+    //     color="primary"
+    //     className="mx-4"
+    //     checked={
+    //       paymentSavedData.length === paymentRequests.length &&
+    //       paymentRequests.length > 0
+    //     }
+    //     onChange={(e) => dispatch(selectAllPaymentRequests(e.target.checked))}
+    //     disabled={savedPaymentLoading ? true : false}
+    //   />
+    // ),
   }[location.pathname];
 
   return (
     <nav
-      className="sticky-top mb-4 pb-2"
+      className="sticky-top mb-4"
       style={{
-        boxShadow: `0px -19px 5px 0px ${
+        top: isMobile ? "2%" : 0,
+        boxShadow: `2px -29px 0px 26px ${
           theme ? "rgba(250,250,250,1)" : "rgba(48, 48, 48, 1)"
         }`,
       }}
@@ -344,20 +379,22 @@ function Navbar() {
         </section>
         <section className="col-lg-4 col-6 justify-sel text-right">
           {asideIconButton}
-          <Online>&nbsp;&nbsp;&nbsp;&nbsp;{asideButton}</Online>
-
-          <Offline>
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            <Button
-              type="button"
-              disabled
-              variant="contained"
-              className="bg-warning text-white"
-            >
-              <WifiOffRoundedIcon />
-              <BrowserView>&nbsp;&nbsp;Offline</BrowserView>
-            </Button>
-          </Offline>
+          {isOnline ? (
+            <Fragment>&nbsp;&nbsp;&nbsp;&nbsp;{asideButton}</Fragment>
+          ) : (
+            <Fragment>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <Button
+                type="button"
+                disabled
+                variant="contained"
+                className="bg-warning text-white"
+              >
+                <WifiOffRoundedIcon />
+                <BrowserView>&nbsp;&nbsp;Offline</BrowserView>
+              </Button>
+            </Fragment>
+          )}
         </section>
       </Paper>
     </nav>

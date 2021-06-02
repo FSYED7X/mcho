@@ -6,7 +6,7 @@ export const screenSlice = createSlice({
     sideNavOpen: localStorage.sideNavOpen
       ? JSON.parse(localStorage.sideNavOpen)
       : true,
-    theme: localStorage.theme ? JSON.parse(localStorage.theme) : true,
+    theme: localStorage.theme ? JSON.parse(localStorage.theme) : false,
     loading: false,
     snackbar: {
       open: false,
@@ -15,6 +15,8 @@ export const screenSlice = createSlice({
     },
     addBankDialog: false,
     addCustomerDialog: false,
+    editCustomerDialog: false,
+    customerToEdit: "",
     banksListLoading: false,
   },
   reducers: {
@@ -47,6 +49,10 @@ export const screenSlice = createSlice({
     toggleBanksListLoading: (state) => {
       state.banksListLoading = !state.banksListLoading;
     },
+    toggleEditCustomerDialog: (state, action) => {
+      state.customerToEdit = action.payload;
+      state.editCustomerDialog = !state.editCustomerDialog;
+    },
   },
 });
 
@@ -60,6 +66,7 @@ export const {
   closeSnackbar,
   toggleAddBankDialog,
   toggleBanksListLoading,
+  toggleEditCustomerDialog,
 } = screenSlice.actions;
 
 export default screenSlice.reducer;

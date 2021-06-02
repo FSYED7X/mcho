@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -7,34 +7,46 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 import { useDispatch, useSelector } from "react-redux";
-import { openSnackbar, toggleAddCustomerDialog } from "../../redux/screenSlice";
-import { TextField } from "@material-ui/core";
-import { Alert } from "@material-ui/lab";
-import { BASE_URL } from "../../urlConstants";
+import {
+  openSnackbar,
+  toggleEditCustomerDialog,
+} from "../../redux/screenSlice";
+import { FormControlLabel, Switch, TextField } from "@material-ui/core";
+import { BASE_URL, GOOGLE_IMAGE } from "../../urlConstants";
 
 import { ReactImgInput } from "react-img-input";
 import "react-img-input/dist/index.css";
 import { useIt } from "../../Context";
+const _ = require("lodash");
 
-export default function AddCustomer() {
+export default function EditCustomer() {
+  const customerList = useSelector((state) => state.customersList.data);
+  const customer = _.find(customerList, {
+    ROW: useSelector((state) => state.screen.customerToEdit),
+  });
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const dispatch = useDispatch();
-  const open = useSelector((state) => state.screen.addCustomerDialog);
+  const open = useSelector((state) => state.screen.editCustomerDialog);
   const close = () => {
-    dispatch(toggleAddCustomerDialog());
+    setEdited({});
+    dispatch(toggleEditCustomerDialog(""));
     setError(false);
   };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const form = useRef();
   const [Image, setImage] = useState();
-
+  const [edited, setEdited] = useState({});
   const themee = useSelector((state) => state.screen.theme);
 
   const { getCustomersList } = useIt();
 
-  const config = {
+  useEffect(() => {
+    console.log(edited);
+  }, [edited]);
+
+  const config = customer && {
     size: 120,
     captureBtn: {
       bg: "crimson",
@@ -44,7 +56,7 @@ export default function AddCustomer() {
       bg: "#F4B230",
       color: "#fff",
     },
-    defaultImg: "",
+    defaultImg: GOOGLE_IMAGE + customer.IMAGE,
     theme: themee ? "light" : "dark",
     compression: {
       maxSizeMB: 0.1,
@@ -53,16 +65,12 @@ export default function AddCustomer() {
     },
   };
 
-  const addCustomer = (e) => {
+  const editCustomer = (e) => {
     e.preventDefault();
     setLoading(true);
-
-    var raw = JSON.stringify({
-      name: form.current.name.value,
-      mobile: form.current.mobile.value,
-      details: form.current.detail.value,
-      image: form.current.image.value,
-    });
+    var data = { ...edited, ROW: customer.ROW };
+    var raw = JSON.stringify(data);
+    console.log(data);
 
     var requestOptions = {
       method: "POST",
@@ -70,27 +78,40 @@ export default function AddCustomer() {
       redirect: "follow",
     };
 
-    fetch(BASE_URL + "?action=addCustomer", requestOptions)
+    //   {
+    //     "NAME": "FAHADDD",
+    //     "MOBILE": "02121212000",
+    //     "DETAILS": "ERW",
+    //     "IMAGE": ""
+    //     "ROW": 4
+    // }
+
+    fetch(BASE_URL + "?action=editCustomer", requestOptions)
       .then((response) => response.json())
       .then((result) => {
+        console.log(result);
         if (result.result === "error") setError(true);
         else {
           setError(false);
-          close();
           dispatch(
             openSnackbar({
-              mesg: "Customer Added Successfully",
+              mesg: "Customer Edited Successfully",
               type: "success",
             })
           );
           getCustomersList();
+          close();
         }
         setLoading(false);
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => {
+        setLoading(false);
+        setError(true);
+        console.log("error", error);
+      });
   };
 
-  return (
+  return customer ? (
     <Dialog
       fullScreen={fullScreen}
       open={open}
@@ -104,15 +125,22 @@ export default function AddCustomer() {
         className="sticky-top"
         style={{ backgroundColor: "inherit" }}
       >
-        {"Add New Customer"}
+        {"Edit Customer"}
       </DialogTitle>
 
       <div style={{ width: "fit-content" }} className="mx-auto mb-4">
-        <ReactImgInput config={config} setOutput={setImage} />
+        <ReactImgInput
+          config={config}
+          setOutput={(img) => setEdited({ ...edited, IMAGE: img })}
+        />
       </div>
-      <form onSubmit={addCustomer} ref={form}>
+      <form onSubmit={editCustomer} ref={form}>
         <DialogContent>
-          <input name="image" type="hidden" value={Image} />
+          {/* <input
+            name="image"
+            type="hidden"
+            value={Image}
+          /> */}
           <p className="mb-2 ">Customer Name:</p>
           <TextField
             name="name"
@@ -120,6 +148,8 @@ export default function AddCustomer() {
             variant="outlined"
             fullWidth
             className="fw-bolder mb-4"
+            defaultValue={customer.NAME}
+            onChange={(e) => setEdited({ ...edited, NAME: e.target.value })}
           />
           <p className="mb-2">Mobile Number:</p>
           <TextField
@@ -129,6 +159,8 @@ export default function AddCustomer() {
             variant="outlined"
             fullWidth
             className="fw-bolder mb-4"
+            defaultValue={customer.MOBILE}
+            onChange={(e) => setEdited({ ...edited, MOBILE: e.target.value })}
           />
           <p className="mb-2">Detail:</p>
           <TextField
@@ -137,14 +169,32 @@ export default function AddCustomer() {
             variant="outlined"
             fullWidth
             className="fw-bolder mb-4"
+            defaultValue={customer.DETAILS}
+            onChange={(e) => setEdited({ ...edited, DETAILS: e.target.value })}
           />
         </DialogContent>
         <DialogActions className="pb-3 px-4 justify-content-between">
-          <div>
+          {/* <div>asd</div> */}
+          {/* <div>
             <Alert hidden={!error} variant="filled" severity="error">
               Customer Already exists!
             </Alert>
-          </div>
+          </div> */}
+
+          <FormControlLabel
+            label="Active"
+            labelPlacement="start"
+            control={
+              <Switch
+                defaultChecked={customer.STATUS}
+                onChange={(e) =>
+                  setEdited({ ...edited, STATUS: e.target.checked })
+                }
+                name="active"
+              />
+            }
+          />
+
           <div>
             <Button
               disabled={loading}
@@ -159,18 +209,20 @@ export default function AddCustomer() {
             </Button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <Button
-              disabled={loading}
+              disabled={loading || !edited}
               size="large"
               type="submit"
               color="primary"
               variant="contained"
               className={`bg-warning text-white position-relative`}
             >
-              &nbsp;{!loading ? "ADD" : <i className="bricks-white" />}&nbsp;
+              &nbsp;{!loading ? "SAVE" : <i className="bricks-white" />}&nbsp;
             </Button>
           </div>
         </DialogActions>
       </form>
     </Dialog>
+  ) : (
+    ""
   );
 }

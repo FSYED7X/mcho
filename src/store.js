@@ -13,6 +13,7 @@ import paymentSavedDataReducer from './redux/payment/paymentSavedDataSlice'
 
 import banksListReducer from './redux/banksListSlice'
 import customersListReducer from './redux/customersListSlice'
+import operatorsListReducer from './redux/operatorsListSlice'
 
 export default configureStore({
     reducer: {
@@ -26,6 +27,7 @@ export default configureStore({
         paymentSavedData: paymentSavedDataReducer,
         banksList: banksListReducer,
         customersList: customersListReducer,
+        operatorsList: operatorsListReducer,
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware({
         serializableCheck: false

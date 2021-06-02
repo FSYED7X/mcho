@@ -10,14 +10,17 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { isMobile } from "react-device-detect";
 import { BASE_URL } from "../../urlConstants";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { useDispatch } from "react-redux";
 import { setAccess, setUser } from "../../redux/authSlice";
 import { useHistory } from "react-router-dom";
-
+import { login } from "../../adapters/Firebase";
+import AppContext from "../../store/AppContext/AppContext";
+import firebase from "../../adapters/Firebase";
+import { FIREBASE_USERS_IDENTIFIER } from "../../constants";
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -53,6 +56,7 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
+    color: "#fff",
   },
   form: {
     width: "100%",
@@ -73,40 +77,64 @@ export default function Login(props) {
   });
   const dispatch = useDispatch();
   const history = useHistory();
+  const { notify, getAccess } = useContext(AppContext);
   const handleSubmit = (e) => {
     setState({ ...state, loading: true });
     e.preventDefault();
-    var myHeaders = new Headers();
-    var raw = JSON.stringify({ email: state.email, password: state.password });
-    var requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: raw,
-      redirect: "follow",
-    };
 
-    fetch(BASE_URL + "?action=auth", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        if (result.result) {
-          localStorage.user = JSON.stringify(result.result);
-          setState({ ...state, loading: false });
-          dispatch(setUser(result.result));
-          props.location.state
-            ? history.push(props.location.state.prevPath)
-            : result.result.access.bank
-            ? history.push("/bank/form")
-            : result.result.access.invoice || result.result.access.payment
-            ? history.push("/bank/form")
-            : history.push("/noaccess");
-        } else {
-          setState({ ...state, loading: false, error: true });
-        }
+    login(state.email, state.password)
+      .then((res) => {
+        const { uid, email } = res;
+        firebase
+          .database()
+          .ref(FIREBASE_USERS_IDENTIFIER + "/" + uid)
+          .once("value", (snapshot) => {
+            const data =  snapshot.val();
+            localStorage.user = JSON.stringify(data);
+            notify(`Welcome ${email}`, "success");
+            dispatch(setUser(data));
+            setState({ ...state, loading: false });
+            history.push("/bank/form");
+          });
       })
-      .catch((error) => {
+      .catch((err) => {
+        console.log(err);
+        notify(err.message, "error");
         setState({ ...state, loading: false });
-        console.log("error", error);
       });
+
+    // var myHeaders = new Headers();
+    // var raw = JSON.stringify({ email: state.email, password: state.password });
+    // var requestOptions = {
+    //   method: "POST",
+    //   headers: myHeaders,
+    //   body: raw,
+    //   redirect: "follow",
+    // };
+
+    // fetch(BASE_URL + "?action=auth", requestOptions)
+    //   .then((response) => response.json())
+    //   .then((result) => {
+    //     if (result.result) {
+    //       localStorage.user = JSON.stringify(result.result);
+    //       setState({ ...state, loading: false });
+    //       dispatch(setUser(result.result));
+    //       history.push("/bank/form")
+    //       // props.location.state
+    //       //   ? history.push(props.location.state.prevPath)
+    //       //   : result.result.access.bank
+    //       //   ? history.push("/bank/form")
+    //       //   : result.result.access.invoice || result.result.access.payment
+    //       //   ? history.push("/bank/form")
+    //       //   : history.push("/noaccess");
+    //     } else {
+    //       setState({ ...state, loading: false, error: true });
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     setState({ ...state, loading: false });
+    //     console.log("error", error);
+    //   });
   };
 
   return (

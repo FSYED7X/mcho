@@ -44,9 +44,9 @@ function Saved() {
   const { date } = useIt();
   const user = useSelector((state) => state.auth.user);
 
-  useEffect(() => {
-    !user.access.invoice && !user.access.payment && history.push("/noaccess");
-  }, [user]);
+  // useEffect(() => {
+  //   !user.access.invoice && !user.access.payment && history.push("/noaccess");
+  // }, [user]);
 
   useEffect(() => {
     document.querySelector("body").scrollTo(0, 0);

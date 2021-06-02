@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { createRef, useEffect } from "react";
 import SideNav from "./components/SideNav/SideNav";
 import { BrowserView, MobileView } from "react-device-detect";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,6 +27,16 @@ import Login from "./components/Login/Login";
 import NoAccess from "./components/NoAccess/NoAccess";
 import { BASE_URL } from "./urlConstants";
 import { setUser } from "./redux/authSlice";
+import ManageBanks from "./screens/Settings/ManageBanks";
+import ManageCustomers from "./screens/Settings/ManageCustomers";
+import EditCustomer from "./components/EditCustomerDialog/EditCustomerDialog";
+import ManageOperators from "./screens/Settings/ManageOperators";
+import AppProvider from "./store/AppContext/AppProvider";
+import { SnackbarProvider } from "notistack";
+import { IconButton } from "@material-ui/core";
+import { CloseRounded } from "@material-ui/icons";
+
+var _ = require("lodash");
 
 export const light = {
   palette: {
@@ -64,39 +74,38 @@ export const dark = {
 
 function App() {
   const theme = useSelector((state) => state.screen.theme);
-  const location = useLocation();
   const user = useSelector((state) => state.auth.user);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (user) {
-      document.getElementById("container").scrollTo(0, 0);
-      var myHeaders = new Headers();
-      var raw = JSON.stringify({ email: user.email });
-      var requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        body: raw,
-        redirect: "follow",
-      };
-      fetch(BASE_URL + "?action=auth2", requestOptions)
-        .then((response) => response.json())
-        .then((result) => {
-          if (result.result) {
-            localStorage.user = JSON.stringify(result.result);
-            dispatch(setUser(result.result));
-          } else {
-            localStorage.clear();
-            window.location.reload();
-          }
-        })
-        .catch((error) => {
-          console.log("error", error);
-        });
-    }
-  }, [location]);
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   if (user) {
+  //     document.getElementById("container").scrollTo(0, 0);
+  //     var myHeaders = new Headers();
+  //     var raw = JSON.stringify({ email: user.email });
+  //     var requestOptions = {
+  //       method: "POST",
+  //       headers: myHeaders,
+  //       body: raw,
+  //       redirect: "follow",
+  //     };
+  //     fetch(BASE_URL + "?action=auth2", requestOptions)
+  //       .then((response) => response.json())
+  //       .then((result) => {
+  //         if (result.result) {
+  //           localStorage.user = JSON.stringify(result.result);
+  //           dispatch(setUser(result.result));
+  //         } else {
+  //           localStorage.clear();
+  //           window.location.reload();
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log("error", error);
+  //       });
+  //   }
+  // }, []);
 
   const PrivateRoute = ({ component: Component, ...rest }) => {
+    // console.log(rest.tag)
     return (
       <Route
         {...rest}
@@ -113,7 +122,13 @@ function App() {
     );
   };
 
+  // const defaultUrl = _.findKey(user.access, function (o) {
+  //   return o;
+  // });
+
   const Routes = () => {
+    
+    // console.log(user.access)
     return (
       <Switch>
         <PrivateRoute path="/bank/form" component={BankForm} tag="bank" />
@@ -129,43 +144,82 @@ function App() {
           component={InvoiceSaved}
           tag="invoice"
         />
+        <PrivateRoute
+          path="/settings"
+          exact
+          component={Settings}
+          tag="settings"
+        />
+        <PrivateRoute
+          path="/settings/manage/bks"
+          exact
+          component={ManageBanks}
+          tag="settings"
+        />
+        <PrivateRoute
+          path="/settings/manage/customers"
+          exact
+          component={ManageCustomers}
+          tag="settings"
+        />
+        <PrivateRoute
+          path="/settings/manage/operators"
+          exact
+          component={ManageOperators}
+          tag="oerators"
+        />
 
-        {/* <PrivateRoute path="/payment/form" component={PaymentForm} /> */}
-        {/* <PrivateRoute path="/payment/saved" component={PaymentSaved} /> */}
-
-        <PrivateRoute path="/settings" component={Settings} tag="settings" />
         <Route path="/noaccess" component={NoAccess} />
         <PrivateRoute path="/" exact>
-          <Redirect to="/bank/form" />
+          <Redirect
+            // to={{ bank: "/bank/form", invoice: "/invoice/form" }[defaultUrl]}
+            to={"/bank/form"}
+          />
         </PrivateRoute>
       </Switch>
     );
   };
 
+  const notistackRef = createRef();
+  const onClickDismiss = (key) => () => {
+    notistackRef.current.closeSnackbar(key);
+  };
+
   return (
-    <ThemeProvider theme={createMuiTheme(theme ? light : dark)}>
-      <CssBaseline />
+    <SnackbarProvider
+      hideIconVariant={false}
+      maxSnack={3}
+      anchorOrigin={{ horizontal: "left", vertical: "bottom" }}
+      ref={notistackRef}
+      action={(key) => <IconButton onClick={onClickDismiss(key)}><CloseRounded/></IconButton>}
+    >
+      <AppProvider>
+        <ThemeProvider theme={createMuiTheme(theme ? light : dark)}>
+          <CssBaseline />
 
-      <ContextProvider>
-        <Route path="/login" component={Login} />
+          <ContextProvider>
+            <Route path="/login" component={Login} />
 
-        <BrowserView>
-          <SideNav>
-            <Routes />
-          </SideNav>
-        </BrowserView>
+            <BrowserView>
+              <SideNav>
+                <Routes />
+              </SideNav>
+            </BrowserView>
 
-        <MobileView>
-          <BottomNav>
-            <Routes />
-          </BottomNav>
-        </MobileView>
+            <MobileView>
+              <BottomNav>
+                <Routes />
+              </BottomNav>
+            </MobileView>
 
-        <AddBank />
-        <AddCustomer />
-        <SnackBar />
-      </ContextProvider>
-    </ThemeProvider>
+            <AddBank />
+            <AddCustomer />
+            <EditCustomer />
+            <SnackBar />
+          </ContextProvider>
+        </ThemeProvider>
+      </AppProvider>
+    </SnackbarProvider>
   );
 }
 

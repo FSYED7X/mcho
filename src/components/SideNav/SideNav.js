@@ -94,9 +94,8 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(4),
+    paddingBottom: theme.spacing(2),
     position: "relative",
-    // paddingLeft: '0!important',
     height: "100vh",
     overflowY: "scroll",
   },
@@ -154,7 +153,7 @@ export default function SideNav({ children }) {
         <Divider />
         <Divider />
         <br />
-        {user && user.access.bank && (
+        {user && (
           <ListItem
             component={Link}
             to="/bank/form"
@@ -169,7 +168,7 @@ export default function SideNav({ children }) {
           </ListItem>
         )}
 
-        {user && (user.access.invoice || user.access.payment) && (
+        {user &&(
           <ListItem
             component={Link}
             to="/invoice/form"
@@ -221,20 +220,18 @@ export default function SideNav({ children }) {
             </ListItem>
           )}
 
-          {user && user.access.settings && (
-            <ListItem
-              component={Link}
-              to="/settings"
-              selected={location.pathname.includes("/settings")}
-              button
-              className={`${classes.ListItem} mb-2`}
-            >
-              <ListItemIcon>
-                <SettingsRoundedIcon />
-              </ListItemIcon>
-              <ListItemText primary="Settings" />
-            </ListItem>
-          )}
+          <ListItem
+            component={Link}
+            to="/settings"
+            selected={location.pathname.includes("/settings")}
+            button
+            className={`${classes.ListItem} mb-2`}
+          >
+            <ListItemIcon>
+              <SettingsRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary="Settings" />
+          </ListItem>
 
           <ListItem
             button

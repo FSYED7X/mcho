@@ -23,7 +23,7 @@ import CloudUploadOutlinedIcon from "@material-ui/icons/CloudUploadOutlined";
 import RotateLeftOutlinedIcon from "@material-ui/icons/RotateLeftOutlined";
 import SaveIcon from "@material-ui/icons/Save";
 import { openSnackbar } from "../../redux/screenSlice";
-import { Offline, Online } from "react-detect-offline";
+
 import WifiOffRoundedIcon from "@material-ui/icons/WifiOffRounded";
 import { setInvoiceSavedData } from "../../redux/invoice/invoiceSavedDataSlice";
 import { useIt } from "../../Context";
@@ -34,6 +34,8 @@ import CustomersList from "../../components/CustomersList/CustomersList";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import { BrowserView } from "react-device-detect";
 import { useHistory } from "react-router-dom";
+import { Fragment } from "react";
+const isOnline = require("is-online");
 
 const transactionType = ["Shop", "Office", "Godam", "Other"];
 const paymentType = [
@@ -53,20 +55,21 @@ export default function Invoice() {
   const form = useRef();
   const loading = useSelector((state) => state.invoiceForm.loading);
   const { uploadData } = useIt();
-  const user = useSelector((state) => state.auth.user);
   const history = useHistory();
+  const iaccess = useSelector((state) => state.auth.user.access.invoice.form);
+  const paccess = useSelector((state) => state.auth.user.access.payment.form);
 
   useEffect(() => {
-    if (user.access.invoice && !user.access.payment) {
+    if (iaccess && paccess) {
       dispatch(changeFormType("invoice"));
     }
-    if (!user.access.invoice && user.access.payment) {
+    if (!iaccess && paccess) {
       dispatch(changeFormType("payment"));
     }
-    if (!user.access.invoice && !user.access.payment) {
+    if (!iaccess && !paccess) {
       history.push("/noaccess");
     }
-  }, [user]);
+  }, [iaccess, paccess]);
 
   const useStyles = makeStyles((theme) => ({
     large: {
@@ -127,7 +130,7 @@ export default function Invoice() {
   return (
     <form
       ref={form}
-      className="row py-2 justify-content-between"
+      className="row  mt-4 py-2 justify-content-between"
       onSubmit={(e) => e.preventDefault()}
     >
       <div className="col-lg-2 col-12 align-self-center">
@@ -188,10 +191,10 @@ export default function Invoice() {
                     aria-label="text alignment"
                     className={classes.root}
                   >
-                    {user.access.invoice && (
+                    {iaccess && (
                       <ToggleButton value="invoice">INVOICE</ToggleButton>
                     )}
-                    {user.access.payment && (
+                    {paccess && (
                       <ToggleButton value="payment">PAYMENT</ToggleButton>
                     )}
                   </ToggleButtonGroup>
@@ -520,38 +523,39 @@ export default function Invoice() {
           <SaveIcon fontSize="small" />
           &nbsp;&nbsp;Save
         </Button>
-
-        <Online>
-          <Button
-            size="large"
-            disabled={loading ? true : false}
-            variant="contained"
-            className={`bg-warning text-white`}
-            onClick={submit}
-          >
-            {loading ? (
-              // <i className="bricks-white" />
-              <CircularProgress color="inherit" size="25px" thickness="5" />
-            ) : (
-              <span style={{ display: "flex" }}>
-                <CloudUploadOutlinedIcon />
-                <BrowserView>&nbsp;&nbsp;Upload</BrowserView>
-              </span>
-            )}
-          </Button>
-        </Online>
-
-        <Offline>
-          <Button
-            size="large"
-            disabled
-            variant="contained"
-            className={`text-light btn-warning`}
-          >
-            <WifiOffRoundedIcon />
-            &nbsp;&nbsp;Offline
-          </Button>
-        </Offline>
+        {isOnline ? (
+          <Fragment>
+            <Button
+              size="large"
+              disabled={loading ? true : false}
+              variant="contained"
+              className={`bg-warning text-white`}
+              onClick={submit}
+            >
+              {loading ? (
+                // <i className="bricks-white" />
+                <CircularProgress color="inherit" size="25px" thickness="5" />
+              ) : (
+                <span style={{ display: "flex" }}>
+                  <CloudUploadOutlinedIcon />
+                  <BrowserView>&nbsp;&nbsp;Upload</BrowserView>
+                </span>
+              )}
+            </Button>
+          </Fragment>
+        ) : (
+          <Fragment>
+            <Button
+              size="large"
+              disabled
+              variant="contained"
+              className={`text-light btn-warning`}
+            >
+              <WifiOffRoundedIcon />
+              &nbsp;&nbsp;Offline
+            </Button>
+          </Fragment>
+        )}
       </div>
     </form>
   );

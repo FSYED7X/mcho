@@ -41,12 +41,11 @@ function SavedData() {
   const classes = useStyles();
   const history = useHistory();
   const { date } = useIt();
-  const user = useSelector((state) => state.auth.user);
-  
+  const access = useSelector((state) => state.auth.user.access.bank.saved);
+
   useEffect(() => {
-    document.querySelector("body").scrollTo(0, 0);
-    !user.access.bank && history.push("/noaccess");
-  });
+    !access && history.push("/noaccess");
+  }, []);
 
   const edit = (item, index) => {
     history.push("/bank/form");

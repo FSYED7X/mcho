@@ -7,27 +7,12 @@ import { setPaymentData } from '../../redux/payment/paymentFormSlice';
 import Calendar from '../../components/Calendar/Calendar'
 import CurrencyList from '../../components/CurrencyList/CurrencyList';
 import copy from 'copy-to-clipboard';
-import { setBankData, resetBankForm } from '../../redux/bank/bankFormSlice'
-import CloudUploadOutlinedIcon from '@material-ui/icons/CloudUploadOutlined';
-import RotateLeftOutlinedIcon from '@material-ui/icons/RotateLeftOutlined';
-import SaveIcon from '@material-ui/icons/Save';
-import { openSnackbar, toggleLoading } from '../../redux/screenSlice'
-import { Offline, Online } from "react-detect-offline";
-import ToggleButtons from '../../components/ToggleButtons/ToggleButtons'
-import WifiOffRoundedIcon from '@material-ui/icons/WifiOffRounded';
-import { setbankSavedData } from '../../redux/bank/bankSavedDataSlice'
-import { useIt } from '../../Context'
-import BanksList from '../../components/BanksList/BanksList'
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined';
-import { nanoid } from 'nanoid'
-import { BASE_URL } from '../../urlConstants'
 
 const useStyles = makeStyles((theme) => ({
     large: {
-        // width: theme.spacing(15),
         width: theme.spacing(17),
         height: theme.spacing(17),
-        // height: theme.spacing(15),
     },
 }));
 const transactionType = ['Shop', 'Office', 'Godam', 'Other']
@@ -35,18 +20,11 @@ const paymentType = ['Cheque', 'Cash', 'Credit/Debit Card', 'Online/Atm', 'Bank 
 
 export default function Payment() {
     const classes = useStyles();
-    const theme = useSelector(state => state.screen.theme)
     const dispatch = useDispatch()
     const paymentForm = useSelector(state => state.paymentForm)
     const amount = useRef()
     const form = useRef()
     const [selectedValue, setSelectedValue] = useState(paymentForm.debit ? 'debit' : 'credit')
-    const loading = useSelector(state => state.screen.loading)
-    // const { uploadData, getBanksList } = useIt()
-
-    useEffect(() => {
-        // if (!localStorage.banksList) getBanksList()
-    }, [])
 
     const submit = (e) => {
         e.preventDefault()

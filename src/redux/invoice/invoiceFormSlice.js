@@ -10,6 +10,8 @@ export const invoiceFormSlice = createSlice({
         image: "",
         name: "",
         detail: "",
+        row:"",
+        status:""
       },
       currency: "PKR Pakistani Rupee",
       date: new Date().toString(),

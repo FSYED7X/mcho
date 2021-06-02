@@ -6,12 +6,14 @@ import { setBankListData, toggleBankListLoading } from "./redux/banksListSlice";
 import {
   setCustomersListData,
   toggleCustomersListLoading,
+  toggleDeleteLoading,
 } from "./redux/customersListSlice";
 import { BASE_URL } from "./urlConstants";
 import { setBankData } from "./redux/bank/bankFormSlice";
 import { setInvoiceData } from "./redux/invoice/invoiceFormSlice";
 import { nanoid } from "nanoid";
 import { useHistory } from "react-router-dom";
+import { setOperatorsListData, toggleOperatorsListLoading } from "./redux/operatorsListSlice";
 
 const Context = createContext();
 const month = [
@@ -60,7 +62,6 @@ function ContextProvider({ children }) {
     dispatch(toggleLoading());
     return new Promise((resolve, reject) => {
       setCode && dispatch(setCode({ key: "code", value: nanoid() }));
-      console.log(JSON.stringify(data));
       var requestOptions = {
         method: "POST",
         body: JSON.stringify(data),
@@ -69,7 +70,6 @@ function ContextProvider({ children }) {
       fetch(URL, requestOptions)
         .then((response) => response.json())
         .then((result) => {
-          console.log(result);
           if (result.result) {
             dispatch(
               openSnackbar({
@@ -140,12 +140,51 @@ function ContextProvider({ children }) {
       .catch((error) => console.log("error", error));
   };
 
+  const getOperatorsList = () => {
+    dispatch(toggleOperatorsListLoading());
+    fetch(BASE_URL + "?action=operators")
+      .then((response) => response.json())
+      .then((result) => {
+        dispatch(toggleOperatorsListLoading());
+        dispatch(setOperatorsListData(result.result));
+        localStorage.operatorsList = JSON.stringify(result.result);
+      })
+      .catch((error) => console.log("error", error));
+  };
+
+  const deleteCustomer = (customers, callback) => {
+    dispatch(toggleDeleteLoading());
+
+    var raw = JSON.stringify(customers);
+    console.log(raw);
+
+    var requestOptions = {
+      method: "POST",
+      body: raw,
+      redirect: "follow",
+    };
+
+    fetch(BASE_URL + "?action=deleteCustomer", requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        dispatch(toggleDeleteLoading());
+        callback && callback();
+        getCustomersList();
+      })
+      .catch((error) => {
+        console.log("error", error);
+        dispatch(toggleDeleteLoading());
+      });
+  };
+
   const value = {
     date,
     logout,
     uploadData,
     getBanksList,
     getCustomersList,
+    deleteCustomer,
+    getOperatorsList
   };
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
