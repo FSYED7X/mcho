@@ -13,12 +13,13 @@ import {
   NotInterestedOutlined,
   RefreshOutlined,
 } from "@material-ui/icons";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useIt } from "../../../Context";
 import MUIDataTable from "mui-datatables";
 import { GOOGLE_IMAGE } from "../../../urlConstants";
 import { toggleEditCustomerDialog } from "../../../redux/screenSlice";
+import AppContext from "../../../store/AppContext/AppContext";
 
 const _ = require("lodash");
 
@@ -28,6 +29,12 @@ export default function ManageBanks() {
   const { getCustomersList } = useIt();
   const [oil, setOil] = useState([]);
   const dispatch = useDispatch();
+  const { issm, isxs } = useContext(AppContext);
+  const [align, setAlign] = useState("left");
+
+  useEffect(() => {
+    setAlign(issm || isxs ? "center" : "left");
+  }, [issm, isxs]);
 
   useEffect(() => {
     setOil(
@@ -41,12 +48,10 @@ export default function ManageBanks() {
         item.ROW,
       ])
     );
-    // console.log(oil);
   }, [customerList]);
 
   useEffect(() => {
     _.isEmpty(customerList) && getCustomersList();
-    // console.log(customerList);
   }, []);
 
   return (
@@ -58,7 +63,6 @@ export default function ManageBanks() {
           {
             name: "Name",
             options: {
-              //   filter: false,
             },
           },
           {
@@ -68,7 +72,7 @@ export default function ManageBanks() {
               sort: false,
               customBodyRender: (value, tableMeta, updateValue) => {
                 return (
-                  <Grid justify="center" container>
+                  <Grid justify={align} container>
                     <Avatar src={GOOGLE_IMAGE + value} />
                   </Grid>
                 );
@@ -76,7 +80,7 @@ export default function ManageBanks() {
               customHeadRender: (columnMeta) => {
                 return (
                   <TableCell>
-                    <Box textAlign="center">{columnMeta.name}</Box>
+                    <Box textAlign={align}>{columnMeta.name}</Box>
                   </TableCell>
                 );
               },
@@ -119,7 +123,7 @@ export default function ManageBanks() {
             options: {
               customBodyRender: (value, tableMeta, updateValue) => {
                 return (
-                  <Box textAlign="center">
+                  <Box textAlign={align}>
                     {value ? (
                       <CheckCircleOutlineRounded color="primary" />
                     ) : (
@@ -131,7 +135,7 @@ export default function ManageBanks() {
               customHeadRender: (columnMeta) => {
                 return (
                   <TableCell>
-                    <Box textAlign="center">{columnMeta.name}</Box>
+                    <Box textAlign={align}>{columnMeta.name}</Box>
                   </TableCell>
                 );
               },
@@ -142,9 +146,11 @@ export default function ManageBanks() {
             options: {
               sort: false,
               filter: false,
+              print: false,
+              download: false,
               customBodyRender: (value, tableMeta, updateValue) => {
                 return (
-                  <Box textAlign="center">
+                  <Box textAlign={align}>
                     <IconButton
                       onClick={() => {
                         dispatch(toggleEditCustomerDialog(value));
@@ -158,7 +164,7 @@ export default function ManageBanks() {
               customHeadRender: (columnMeta) => {
                 return (
                   <TableCell>
-                    <Box textAlign="center">{columnMeta.name}</Box>
+                    <Box textAlign={align}>{columnMeta.name}</Box>
                   </TableCell>
                 );
               },
